@@ -1,5 +1,5 @@
 {
-  "name": "reveal-presentations",
+  "name": "mysql-nodejs-reveal-presentations",
   "version": "1.0.0",
   "description": "reveal.js presentations",
   "scripts": {
