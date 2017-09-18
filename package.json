@@ -1,0 +1,15 @@
+{
+  "name": "reveal-presentations",
+  "version": "1.0.0",
+  "description": "reveal.js presentations",
+  "scripts": {
+    "serve": "revealer --serve",
+    "build": "revealer --build out"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "reveal.js": "^3.5.0",
+    "revealer": "^2.0.4"
+  }
+}
