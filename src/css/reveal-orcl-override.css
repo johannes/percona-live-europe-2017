@@ -34,8 +34,9 @@ color: #58595b;
 .reveal h4,
 .reveal h5,
 .reveal h6 {
-font-family: Calibri;
-color: #58595b;
+  color: #58595b;
+  font-family: Calibri;
+  text-transform: none;
 }
 
 .reveal code {

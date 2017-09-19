@@ -79,28 +79,28 @@
 				<section>
 					<!-- Rui: -->
 					<!-- ~15 minutes -->
-					<h2>C/Node.js</h2>
+					<h2>MySQL Connector/Node.js</h2>
 					<section id="cnodejs-overview">
-						<p class="list-header">MySQL connector for Node.js</p>
+						<p class="list-header">Overview</p>
 						<ul>
-							<li>official implementation</li>
-							<li>based on the brand new X protocol</li>
-							<li>asynchronous and <span class="inline">Promise</span>-based</li>
-							<li>supports <span class="inline">async/await</span></li>
-							<li>fluent/chainable API (out-of-the-box query builder)</li>
-							<li>flexible parameter methods</li>
+							<li>Official implementation</li>
+							<li>Based on the brand new X protocol</li>
+							<li>Asynchronous and <span class="inline">Promise</span>-based</li>
+							<li>Supports <span class="inline">async/await</span></li>
+							<li>Fluent/chainable API (out-of-the-box query builder)</li>
+							<li>Flexible parameter methods</li>
 						</ul>
 					</section>
 					<section id="cnodejs-features">
 						<p class="list-header">Some features</p>
 						<ul>
-							<li>document store CRUD API</li>
-							<li>relational CRUD API</li>
-							<li>fallback to plain old SQL</li>
-							<li>transactions and row locking</li>
-							<li>secure sessions (SSL/TLS)</li>
-							<li>authentication</li>
-							<li>configuration handling interface</li>
+							<li>Document store CRUD API</li>
+							<li>Relational CRUD API</li>
+							<li>Fallback to plain old SQL</li>
+							<li>Transactions and row locking</li>
+							<li>Secure sessions (SSL/TLS)</li>
+							<li>Authentication</li>
+							<li>Configuration handling interface</li>
 						</ul>
 					</section>
 					<section id="cnodejs-features-fluent-api">
@@ -197,15 +197,13 @@
 						<p><b class="orcl-red">C</b>REATE</p>
 						<pre>
 							<code class="js" data-trim data-noescape>
-								const collection = schema.getCollection('demo')
+							const collection = schema.getCollection('demo')
 
-								await collection
-								  .add({ name: 'foo' })
-								  .execute()
-
-								await collection
-								  .add([{ name: 'bar' }, { name: 'baz' }])
-								  .execute()
+							// pipelining parallel calls
+							await Promise.all([
+							  collection.add({ name: 'foo' }).execute(),
+							  collection.add([{ name: 'bar' }, { name: 'baz' }]).execute()
+							])
 							</code>
 						</pre>
 					</section>
@@ -324,6 +322,10 @@
 					{ src: 'plugin/notes/notes.js', async: true },
 					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
 				]
+			});
+
+			Reveal.configure({
+				slideNumber: true
 			});
 		</script>
 	</body>
