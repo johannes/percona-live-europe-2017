@@ -1,0 +1,198 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>MySQL Document Store and Node.JS</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/white.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<link rel="stylesheet" href="css/reveal-orcl-override.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section data-background="images/mysql_bg.jpg" class="mysql-full">MySQL Document Store</section>
+				<section>
+					<!-- ~5 minutes -->
+					<p>Welcome, who are we?</p>
+					<table><!-- Yay I'm still a table fan, yes, I'm stuck in HTML 3 :-D -->
+						<!-- Sackoveflow uses typical CSS stuff: https://stackoverflow.com/questions/30861845/how-to-use-two-column-layout-with-reveal-js -->
+						<tr>
+							<td><!-- img src="" --> Johannes Schlüter</td>
+							<td><!-- img src="" --> Rui Quelhas</td>
+						</tr>
+					</table>
+				</section>
+				<section>
+					<!-- Johannes: -->
+					<!-- ~10 minutes -->
+					<section>Introduction to MySQL Document Store</section>
+					<section>Problem statement .... bla bla</section>
+					<section>Introduced with 5.7.?, new protocol, common set of APIs</section>
+					<section>MySQL Shell</section>
+					<section>Support for C++, Java, .Net (C# etc.), Python, PHP</section>
+				</section>
+				<section>
+					<!-- Johannes: -->
+					<!-- ~5 minutes -->
+					<p>Protocol insights</p>
+					<p>protobuf-based, expression trees in protocol</p>
+				</section>
+				<section>
+					<!-- Rui: -->
+					<!-- ~5 minutes -->
+					<p>Quick Intro: What is Node.JS</p>
+					<p>JavaScript on server, async, opensource, ...</p>
+				</section>
+				<section>
+					<!-- Rui: -->
+					<!-- ~15 minutes -->
+					<h2>C/Node.js</h2>
+					<section id="cnodejs-boilerplate">
+						<p>Boilerplate (sessions and schemas)</p>
+						<pre>
+							<code class="js" data-trim data-noescape>
+								const mysqlx = require('@mysql/xdevapi')
+
+								const session = await mysqlx.getSession('mysqlx://demo@localhost:33060')
+
+								// re-create the schema
+								await session.dropSchema('ple2017')
+								const schema = await session.createSchema('ple2017')
+							</code>
+						</pre>
+					</section>
+					<section id="cnodejs-crud-overview">
+						<p>Working with collections and documents (<b class="orcl-red">CRUD</b>)</p>
+						<pre>
+							<code class="js" data-trim data-noescape>
+								const schema = session.getSchema('ple2017')
+
+								// re-crate a collection
+								await schema.dropCollection('demo')
+								await schema.createCollection('demo')
+
+								// or re-use an existing collection
+								const collection = schema.createCollection('demo', { ReuseExistingObject: true })
+							</code>
+						</pre>
+					</section>
+					<section id="cnodejs-crud-create">
+						<p><b class="orcl-red">C</b>REATE</p>
+						<pre>
+							<code class="js" data-trim data-noescape>
+								const collection = schema.getCollection('demo')
+
+								await collection
+								  .add({ name: 'foo' })
+								  .execute()
+
+								await collection
+								  .add([{ name: 'bar' }, { name: 'baz' }])
+								  .execute()
+							</code>
+						</pre>
+					</section>
+					<section id="cnodejs-crud-read">
+						<p><b class="orcl-red">R</b>EAD</p>
+						<pre>
+							<code class="js" data-trim data-noescape>
+								const collection = schema.getCollection('demo')
+								const docs = []
+
+								await collection
+								  .find()
+								  .execute(doc => doc && docs.push(doc))
+
+								console.log(docs) // [{ name: 'foo' }, { name: 'bar' }, { name: 'baz' }]
+							</code>
+						</pre>
+					</section>
+					<section id="cnodejs-crud-update">
+						<P><b class="orcl-red">U</b>PDATE</P>
+						<pre>
+							<code class="js" data-trim data-noescape>
+								const collection = schema.getCollection('demo')
+								const docs = []
+
+								await collection
+								  .modify('$.name == "foo"')
+								  .set('name', 'qux')
+								  .set('oldName', 'foo')
+								  .execute()
+
+								await collection
+								  .find()
+								  .execute(doc => doc && docs.push(doc))
+
+								console.log(docs) // [{ name: 'qux', oldName: 'foo' }, { name: 'bar' }, ... ]
+							</code>
+						</pre>
+					</section>
+					<section id="cnodejs-crud-delete">
+						<p><b class="orcl-red">D</b>ELETE</p>
+						<pre>
+							<code class="js" data-trim data-noescape>
+								const collection = schema.getCollection('demo')
+								const docs = []
+
+								await collection
+								  .remove('$.name == "qux"')
+								  .execute()
+
+								await collection
+								  .find()
+								  .execute(doc => doc && docs.push(doc))
+
+								console.log(docs) // [{ name: 'bar' }, { name: 'baz' }]
+							</code>
+						</pre>
+					</section>
+				</section>
+				<section>
+					<!-- ~5 minutes -->
+					<h2>DEMO</h2>
+				</section>
+				<section>
+					<!-- ~5 minutes -->
+					<p>Thank You &amp; Pointer to InnoDB Cluster &amp; DocStore Session by Jan</p>
+				</section>
+				<section>
+					<img src="images/dolphin.jpg" style="border:0px;">
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>

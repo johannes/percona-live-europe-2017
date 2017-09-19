@@ -43,6 +43,10 @@ color: #58595b;
   font-size: 0.75em;
 }
 
+.reveal pre {
+  box-shadow: none
+}
+
 .reveal a, .reveal a:hover{
   color: #ff0000;
 }
@@ -75,8 +79,12 @@ color: #58595b;
 .reveal .controls .navigate-down.enabled:hover {
   border-top-color: #ee1111; }
 
-  .reveal .progress span {
+.reveal .progress span {
   background: #ff0000;
+}
+
+.orcl-red {
+  color: #ee1111;
 }
 
 .mysql-full {
