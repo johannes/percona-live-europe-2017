@@ -80,7 +80,71 @@
 					<!-- Rui: -->
 					<!-- ~15 minutes -->
 					<h2>C/Node.js</h2>
-					<section id="cnodejs-boilerplate">
+					<section id="cnodejs-overview">
+						<p class="list-header">MySQL connector for Node.js</p>
+						<ul>
+							<li>official implementation</li>
+							<li>based on the brand new X protocol</li>
+							<li>asynchronous and <span class="inline">Promise</span>-based</li>
+							<li>supports <span class="inline">async/await</span></li>
+							<li>fluent/chainable API (out-of-the-box query builder)</li>
+							<li>flexible parameter methods</li>
+						</ul>
+					</section>
+					<section id="cnodejs-features">
+						<p class="list-header">Some features</p>
+						<ul>
+							<li>document store CRUD API</li>
+							<li>relational CRUD API</li>
+							<li>transactions and row locking</li>
+							<li>secure sessions (SSL/TLS)</li>
+							<li>authentication</li>
+							<li>configuration handling interface</li>
+						</ul>
+					</section>
+					<section id="cnodejs-features-fluent-api">
+						<p>Fluent API (Document Store)</p>
+						<pre>
+							<code class="js" data-trim data-noescape>
+								collection.add({ name: 'foo' }).add({ name: 'bar' }).execute()
+
+								collection.find('$.name == :name').bind(name, 'foo').execute()
+
+								collection.modify('$name == "foo"').set('$.name', 'qux').execute()
+
+								collection.remove('$.name == "bar"').execute()
+							</code>
+						</pre>
+					</section>
+					<section id="cnodejs-features-fluent-api-add-ebnf">
+						<p><span class="inline">CollectionAdd</span></p>
+						<img class="ebnf" src="images/collectionadd.png" alt="CollectionAdd EBNF">
+					</section>
+					<section id="cnodejs-features-fluent-api-find-ebnf">
+						<p><span class="inline">CollectionFind</span></p>
+						<img class="ebnf" src="images/collectionfind.png" alt="CollectionFind EBNF">
+					</section>
+					<section id="cnodejs-features-fluent-api-modify-ebnf">
+						<p><span class="inline">CollectionModify</span></p>
+						<img class="ebnf" src="images/collectionmodify.png" alt="CollectionModify EBNF">
+					</section>
+					<section id="cnodejs-features-fluent-api-remove-ebnf">
+						<p><span class="inline">CollectionRemove</span></p>
+						<img class="ebnf" src="images/collectionremove.png" alt="CollectionRemove EBNF">
+					</section>
+					<section id="cnodejs-features-async">
+						<p>Asynchronous API <=> <span class="inline">Promise</span></p>
+						<ul>
+							<li><span class="inline">getSession()</span></li>
+							<li><span class="inline">createSchema()</span></li>
+							<li><span class="inline">dropSchema()</span></li>
+							<li><span class="inline">createCollection()</span></li>
+							<li><span class="inline">dropCollection()</span></li>
+							<li><span class="inline">execute()</span></li>
+							<li>&hellip;</li>
+						</ul>
+					</section>
+					<section id="cnodejs-snippet-boilerplate">
 						<p>Boilerplate (sessions and schemas)</p>
 						<pre>
 							<code class="js" data-trim data-noescape>

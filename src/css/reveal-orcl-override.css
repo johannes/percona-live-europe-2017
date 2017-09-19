@@ -89,6 +89,21 @@ color: #58595b;
   background: #ff0000;
 }
 
+.reveal .list-header {
+  font-weight: bold
+}
+
+.reveal .inline {
+  font-family: "Source Code Pro", monospace;
+  font-style: italic;
+  font-size: 0.75em;
+}
+
+.reveal img.ebnf {
+  border: none;
+  box-shadow: none;
+}
+
 .orcl-red {
   color: #ee1111;
 }
