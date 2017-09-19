@@ -31,7 +31,7 @@
 					<!-- ~5 minutes -->
 					<p>Welcome, who are we?</p>
 					<table><!-- Yay I'm still a table fan, yes, I'm stuck in HTML 3 :-D -->
-						<!-- Sackoveflow uses typical CSS stuff: https://stackoverflow.com/questions/30861845/how-to-use-two-column-layout-with-reveal-js -->
+						<!-- Stackoveflow uses typical CSS stuff: https://stackoverflow.com/questions/30861845/how-to-use-two-column-layout-with-reveal-js -->
 						<tr>
 							<td><!-- img src="" --> Johannes Schlüter</td>
 							<td><!-- img src="" --> Rui Quelhas</td>
@@ -50,18 +50,215 @@
 				</section>
 				<section>
 					<!-- Johannes: -->
-					<!-- ~10 minutes -->
-					<section>Introduction to MySQL Document Store</section>
-					<section>Problem statement .... bla bla</section>
-					<section>Introduced with 5.7.?, new protocol, common set of APIs</section>
-					<section>MySQL Shell</section>
-					<section>Support for C++, Java, .Net (C# etc.), Python, PHP</section>
+					<!-- ~5 minutes -->
+					<h2>Unstructured Data</h2>
+					<section>
+						<p>Not only relational data</p>
+						<ul>
+							<li>Often data of unstructured nature<!-- TODO:Johannes repeating myself from header ....--></li>
+							<li>Data from external sources</li>
+						</ul>
+						<aside class="notes">
+							<ul>
+								<li>Let's take a look at some samples from OpenStreetmap</li>
+							</ul>
+						</aside>
+					</section>
+					<section>
+						<pre>
+							<code class="js" data-trim data-noescape>
+{
+  "type": "node",
+  "id": 205225934,
+  "lat": 53.3809524,
+  "lon": -6.2456914,
+  "tags": {
+    "amenity": "pub",
+    "name": "The Viscount"
+  }
+}
+							</code>
+						</pre>
+						<aside class="notes">
+							<ul>
+								<li>This is a <i>node</i>, one of the building blocks in OpenStreetmap, a <i>node</i> has an <i>id</i>, geo location and a set of arbitrary tags</li>
+								<li>This specific node is a pub and has a name</li>
+							</ul>
+						</aside>
+					</section>
+					<section>
+						<pre>
+							<code class="js" data-trim data-noescape>
+{
+  "type": "node",
+  "id": 130156802,
+  "lat": 53.3500620,
+  "lon": -6.2526730,
+  "tags": {
+    "addr:city": "Dublin",
+    "addr:country": "IE",
+    "addr:housenumber": "21",
+    "addr:street": "Store Street",
+    "amenity": "pub",
+    "name": "Le Monde",
+    "wheelchair": "no"
+  }
+}
+							</code>
+						</pre>
+						<aside class="notes">
+							<ul>
+								<li>This pub <i>node</i>, contains more data</li>
+							</ul>
+						</aside>
+					</section>
+					<section>
+						<pre>
+							<code class="js" data-trim data-noescape>
+{
+  "type": "node",
+  "id": 132186038,
+  "lat": 53.2747643,
+  "lon": -6.2545959,
+  "tags": {
+    "amenity": "pub",
+    "name": "The Ballinteer House",
+    "wheelchair": "limited"
+  }
+}
+							</code>
+						</pre>
+					</section>
+					<section>
+						<pre>
+							<code class="js" data-trim data-noescape>
+{
+  "type": "node",
+  "id": 132775981,
+  "lat": 53.3441892,
+  "lon": -6.2490239,
+  "tags": {
+    "accommodation": "yes",
+    "addr:city": "Dublin",
+    "addr:country": "IE",
+    "addr:housenumber": "1",
+    "addr:street": "Lombard Street East",
+    "amenity": "pub",
+    "name": "The Lombard",
+    "opening_hours": "Mo-Th 09:00-23:30;Fr-Sa 09:30-01:30;Su 10:00-23:00",
+    "source": "visually identified"
+  }
+}
+							</code>
+						</pre>
+						<aside class="notes">
+							<p>Last one!</p>
+							<p>Other data might of course be way more different</p>
+						</aside>
+					</section>
+					<section>
+						<p>JSON data type</p>
+						<ul>
+							<li>Introduced in MySQL 5.7</li>
+							<li>Efficient storage</li>
+							<li>Set of functions to create, modify and access elements</li>
+							<li>Generated columns allow indexing parts of a document</li>
+						</ul>
+					</section>
+					<section>
+						TODO:Johannes Show pure SQL access ...
+					</section>
 				</section>
 				<section>
 					<!-- Johannes: -->
 					<!-- ~5 minutes -->
-					<p>Protocol insights</p>
-					<p>protobuf-based, expression trees in protocol</p>
+					<h2>MySQL Document Store</h2>
+					<section>Introduced with 5.7.?, new protocol, common set of APIs</section>
+					<section>MySQL Shell</section>
+					<section>Support for C++, Java, .Net (C# etc.), Python, PHP</section>
+					<section>Terms to clarify in this section: Collection, Document, ...</section>
+				</section>
+				<section>
+					<!-- Johannes: -->
+					<!-- ~5 minutes -->
+					<h2>X Protocol</h2>
+					<section>
+						<p>Protocol Insights</p>
+						<ul>
+							<li>New Protocol implemented in X Plugin</li>
+							<li>Based on Google Protocol Buffers
+								<ul>
+									<li>More flexibility for future extensions</li>
+								</ul>
+							</li>
+							<li>Better understanding of content
+								<ul>
+								<li>CRUD Expression trees in protocol</li>
+								<li>Expectations to attach conditions on pipelined statements</li>
+								<li>Bound parameters</li>
+								</ul>
+							</li>
+						</ul>
+						<aside class="notes">
+							<ul>
+								<li>Initially shipped as <i>rapid</i> plugin in MySQL 5.7.12</li>
+								<li>Google Protobuf is an industry standard data serialisation library</li>
+								<li>Middleware can use more information</li>
+							</ul>
+						</aside>
+					</section>
+					<section>
+						<p>Protocol operations</p>
+						<!-- TODO:Johannes shorten, or not? -->
+						<pre><code data-trim data-noescape>
+message ClientMessages {
+  enum Type {
+    CON_CAPABILITIES_GET = 1;
+    CON_CAPABILITIES_SET = 2;
+    CON_CLOSE = 3;
+
+    SESS_AUTHENTICATE_START = 4;
+    SESS_AUTHENTICATE_CONTINUE  = 5;
+    SESS_RESET = 6;
+    SESS_CLOSE = 7;
+
+    SQL_STMT_EXECUTE = 12;
+
+    CRUD_FIND = 17;
+    CRUD_INSERT = 18;
+    CRUD_UPDATE = 19;
+    CRUD_DELETE = 20;
+
+    EXPECT_OPEN = 24;
+    EXPECT_CLOSE = 25;
+
+    CRUD_CREATE_VIEW = 30;
+    CRUD_MODIFY_VIEW = 31;
+    CRUD_DROP_VIEW = 32;
+  }
+}
+						</code></pre>
+					</section>
+					<section>
+						<p>CRUD Example</p>
+						<!-- TODO:Johannes shorten, or not? -->
+						<pre><code data-trim data-noescape>
+Mysqlx.Crud.Find {
+  collection { name: "collection_name",  schema: "test"  }
+  data_model: DOCUMENT
+  criteria {
+    type: OPERATOR
+    operator {
+      name: "=="
+      param { type: IDENT,   identifier { name:"_id" }  }
+      param { type: LITERAL, literal { type: V_STRING,
+                                       v_string: { value: "some_string" } } }
+    }
+  }
+}
+							</code>
+						</pre>
+					</section>
 				</section>
 				<section>
 					<!-- Rui: -->
