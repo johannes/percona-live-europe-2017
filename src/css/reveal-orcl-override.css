@@ -1,5 +1,5 @@
 body:after {
-	content: url(../orcl.png);
+	content: url(../images/orcl.png);
 	position: fixed;
 	bottom: 0.0em;
 	left: 3.5em;
@@ -8,7 +8,7 @@ body:after {
 }
 
 body:before {
-	content: "Copyright © 2017, Oracle and/or its affiliates. All rights reserved. | Confidential – Oracle Internal"; /* /Restricted/Highly Restricted"; */
+	content: "Copyright © 2017, Oracle and/or its affiliates. All rights reserved.";
 	position: fixed;
 	bottom: 0.5em;
 	right: 3.5em;
@@ -16,7 +16,7 @@ body:before {
 }
 
 .reveal:after {
-	content: url(../logo-mysql-110x57.png);
+	content: url(../images/logo-mysql-110x57.png);
 	position: fixed;
 	top: 0.5em;
 	right: 3.5em;
@@ -40,6 +40,7 @@ color: #58595b;
 
 .reveal code {
   font-family: "Source Code Pro", monospace;
+  font-size: 0.75em;
 }
 
 .reveal a, .reveal a:hover{

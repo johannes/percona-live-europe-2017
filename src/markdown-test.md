@@ -1,4 +1,0 @@
-Hello external
-
-
-Bye external
