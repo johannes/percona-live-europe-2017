@@ -164,8 +164,37 @@
 							<li>&hellip;</li>
 						</ul>
 					</section>
+					<section id="cnodejs-features-cursors">
+						<p>Simple push-based "cursors"</p>
+						<pre>
+							<code class="js" data-trim data-noescape>
+							// the cursor gets executed for each element of the result set
+							function cursor (p) {
+							  // p: result set element currently being processed
+							}
+
+							collection.find().execute(cursor)
+							</code>
+						</pre>
+					</section>
+					<section id="cnodejs-features-completion">
+						<p>Operation completion</p>
+						<pre>
+							<code class="js" data-trim data-noescape>
+							collection
+							  .find()
+							  .execute()
+							  .then(function (r) {
+							    // r: instance of Result (coming up next)
+							  })
+							  .catch(function (e) {
+							    // e: instance of Error
+							  })
+							</code>
+						</pre>
+					</section>
 					<section id="cnodejs-features-results">
-						<p>Operations' <span class="inline">Result</span></p>
+						<p><span class="inline">Result</span></p>
 						<ul>
 							<li><span class="inline">getDocumentId()</span></li>
 							<li><span class="inline">getDocumentIds()</span></li>
@@ -175,6 +204,9 @@
 							<li>&hellip;</li>
 						</ul>
 					</section>
+				</section>
+				<section>
+					<h2>Putting everything together</h2>
 					<section id="cnodejs-snippet-boilerplate">
 						<p>Boilerplate (sessions and schemas)</p>
 						<pre>
@@ -195,7 +227,7 @@
 							<code class="js" data-trim data-noescape>
 								const schema = session.getSchema('ple2017')
 
-								// re-crate a collection
+								// re-create a collection
 								await schema.dropCollection('demo')
 								await schema.createCollection('demo')
 
@@ -287,7 +319,6 @@
 							    .arrayAppend('tracking', result.getDocumentId())
 
 							  await session.commit()
-
 							} catch (err) {
 							  await session.rollback()
 							}
