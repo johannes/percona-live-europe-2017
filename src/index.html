@@ -158,7 +158,7 @@
 							</code>
 						</pre>
 					</section>
-					<section id="cnodejs-crud-overview">
+					<section id="cnodejs-snippet-crud">
 						<p>Working with collections and documents (<b class="orcl-red">CRUD</b>)</p>
 						<pre>
 							<code class="js" data-trim data-noescape>
@@ -173,7 +173,7 @@
 							</code>
 						</pre>
 					</section>
-					<section id="cnodejs-crud-create">
+					<section id="cnodejs-snippet-create">
 						<p><b class="orcl-red">C</b>REATE</p>
 						<pre>
 							<code class="js" data-trim data-noescape>
@@ -189,7 +189,7 @@
 							</code>
 						</pre>
 					</section>
-					<section id="cnodejs-crud-read">
+					<section id="cnodejs-snippet-read">
 						<p><b class="orcl-red">R</b>EAD</p>
 						<pre>
 							<code class="js" data-trim data-noescape>
@@ -204,7 +204,7 @@
 							</code>
 						</pre>
 					</section>
-					<section id="cnodejs-crud-update">
+					<section id="cnodejs-snippet-update">
 						<P><b class="orcl-red">U</b>PDATE</P>
 						<pre>
 							<code class="js" data-trim data-noescape>
@@ -225,7 +225,7 @@
 							</code>
 						</pre>
 					</section>
-					<section id="cnodejs-crud-delete">
+					<section id="cnodejs-snippet-delete">
 						<p><b class="orcl-red">D</b>ELETE</p>
 						<pre>
 							<code class="js" data-trim data-noescape>
@@ -241,6 +241,27 @@
 								  .execute(doc => doc && docs.push(doc))
 
 								console.log(docs) // [{ name: 'bar' }, { name: 'baz' }]
+							</code>
+						</pre>
+					</section>
+					<section id="cnodejs-snippet-transactions">
+						<p>Transaction Support</p>
+						<pre>
+							<code class="js" data-trim data-noescape>
+							try {
+							  await session.startTransaction()
+
+							  const result = await schema.getCollection('child')
+							    .add({ name: 'foo', parent: 'bar' })
+
+							  await schema.getCollection('parent').modify('$._id == "bar"')
+							    .arrayAppend('tracking', result.getDocumentId())
+
+							  await session.commit()
+
+							} catch (err) {
+							  await session.rollback()
+							}
 							</code>
 						</pre>
 					</section>
