@@ -96,6 +96,7 @@
 						<ul>
 							<li>document store CRUD API</li>
 							<li>relational CRUD API</li>
+							<li>fallback to plain old SQL</li>
 							<li>transactions and row locking</li>
 							<li>secure sessions (SSL/TLS)</li>
 							<li>authentication</li>
@@ -110,7 +111,7 @@
 
 								collection.find('$.name == :name').bind(name, 'foo').execute()
 
-								collection.modify('$name == "foo"').set('$.name', 'qux').execute()
+								collection.modify('$.name == "foo"').set('$.name', 'qux').execute()
 
 								collection.remove('$.name == "bar"').execute()
 							</code>
@@ -131,6 +132,25 @@
 					<section id="cnodejs-features-fluent-api-remove-ebnf">
 						<p><span class="inline">CollectionRemove</span></p>
 						<img class="ebnf" src="images/collectionremove.png" alt="CollectionRemove EBNF">
+					</section>
+					<section id="cnodejs-features-sql-fallback">
+						<p>Fallback to plain-old SQL</p>
+						<pre>
+							<code class="js" data-trim data-noescape>
+							// insert document into a collection
+							session.sql(`INSERT INTO collection (doc) values ('{"_id":"foo","name":"bar"}')`)
+							  .execute()
+
+							// project "name" property values
+							session.sql(`SELECT JSON_EXTRACT(doc, '$.name') FROM collection`)
+							  .execute()
+
+							// create a virtual column and use it as an index
+							session.sql(`ALTER TABLE collection ADD COLUMN name TEXT(3) GENERATED ALWAYS AS
+							    (JSON_EXTRACT(doc, '$.name')) VIRTUAL, ADD INDEX i_name (name)`)
+							  .execute()
+							</code>
+						</pre>
 					</section>
 					<section id="cnodejs-features-async">
 						<p>Asynchronous API <=> <span class="inline">Promise</span></p>
