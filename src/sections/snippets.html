@@ -1,0 +1,119 @@
+<h2>Putting everything together</h2>
+<section id="cnodejs-snippet-boilerplate">
+    <p>Boilerplate (sessions and schemas)</p>
+    <pre>
+        <code class="js" data-trim data-noescape>
+        const mysqlx = require('@mysql/xdevapi')
+
+        const session = await mysqlx.getSession('mysqlx://demo@localhost:33060')
+
+        // re-create the schema
+        await session.dropSchema('ple2017')
+        const schema = await session.createSchema('ple2017')
+        </code>
+    </pre>
+</section>
+<section id="cnodejs-snippet-crud">
+    <p>Working with collections and documents (<b class="orcl-red">CRUD</b>)</p>
+    <pre>
+        <code class="js" data-trim data-noescape>
+        const schema = session.getSchema('ple2017')
+
+        // re-create a collection
+        await schema.dropCollection('demo')
+        await schema.createCollection('demo')
+
+        // or re-use an existing collection
+        const collection = schema.createCollection('demo', { ReuseExistingObject: true })
+        </code>
+    </pre>
+</section>
+<section id="cnodejs-snippet-create">
+    <p><b class="orcl-red">C</b>REATE</p>
+    <pre>
+        <code class="js" data-trim data-noescape>
+        const collection = schema.getCollection('demo')
+
+        // pipelining parallel calls
+        await Promise.all([
+            collection.add({ name: 'foo' }).execute(),
+            collection.add([{ name: 'bar' }, { name: 'baz' }]).execute()
+        ])
+        </code>
+    </pre>
+</section>
+<section id="cnodejs-snippet-read">
+    <p><b class="orcl-red">R</b>EAD</p>
+    <pre>
+        <code class="js" data-trim data-noescape>
+        const collection = schema.getCollection('demo')
+        const docs = []
+
+        await collection
+            .find()
+            .execute(doc => doc && docs.push(doc))
+
+        console.log(docs) // [{ name: 'foo' }, { name: 'bar' }, { name: 'baz' }]
+        </code>
+    </pre>
+</section>
+<section id="cnodejs-snippet-update">
+    <P><b class="orcl-red">U</b>PDATE</P>
+    <pre>
+        <code class="js" data-trim data-noescape>
+        const collection = schema.getCollection('demo')
+        const docs = []
+
+        await collection
+            .modify('$.name == "foo"')
+            .set('name', 'qux')
+            .set('oldName', 'foo')
+            .execute()
+
+        await collection
+            .find()
+            .execute(doc => doc && docs.push(doc))
+
+        console.log(docs) // [{ name: 'qux', oldName: 'foo' }, { name: 'bar' }, ... ]
+        </code>
+    </pre>
+</section>
+<section id="cnodejs-snippet-delete">
+    <p><b class="orcl-red">D</b>ELETE</p>
+    <pre>
+        <code class="js" data-trim data-noescape>
+        const collection = schema.getCollection('demo')
+        const docs = []
+
+        await collection
+            .remove('$.name == "qux"')
+            .execute()
+
+        await collection
+            .find()
+            .execute(doc => doc && docs.push(doc))
+
+        console.log(docs) // [{ name: 'bar' }, { name: 'baz' }]
+        </code>
+    </pre>
+</section>
+<section id="cnodejs-snippet-transactions">
+    <p>Transaction Support</p>
+    <pre>
+        <code class="js" data-trim data-noescape>
+        try {
+            await session.startTransaction()
+
+            const result = await schema.getCollection('child')
+            .add({ name: 'foo', parent: 'bar' })
+
+            await schema.getCollection('parent').modify('$._id == "bar"')
+            .arrayAppend('tracking', result.getDocumentId())
+
+            await session.commit()
+        } catch (err) {
+            await session.rollback()
+        }
+        </code>
+    </pre>
+</section>

@@ -3,15 +3,19 @@
   "version": "1.0.0",
   "description": "reveal.js presentations",
   "scripts": {
-    "start": "npm run serve",
+    "build": "revealer --build out",
+    "plugin:install:external": "./node_modules/.bin/cp -R node_modules/reveal_external/external node_modules/reveal.js/plugin/external",
+    "prepublish": "npm run plugin:install:external",
     "serve": "revealer --serve",
-    "build": "revealer --build out"
+    "start": "npm run serve"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cash-cp": "^0.2.0",
     "grunt": "^1.0.1",
     "reveal.js": "^3.5.0",
+    "reveal_external": "^1.3.0",
     "revealer": "^2.0.4"
   }
 }
