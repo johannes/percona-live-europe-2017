@@ -294,7 +294,7 @@ Mysqlx.Crud.Find {
 							<li>Concurrency achieved through V8 (threading) or multiple processes</li>
 						</ul>
 					</section>
-					<section id="node-js-dealing-with-asynchronicity">
+					<section id="nodejs-dealing-with-asynchronicity">
 						<p class="list-header">Dealing with asynchronicity</p>
 						<ul>
 							<li>
@@ -303,6 +303,7 @@ Mysqlx.Crud.Find {
 									<li>Event emitters</li>
 									<li>Streams (special kind of event emitters)</li>
 									<li>Promises</li>
+									<li>Other userland experiments</li>
 								</ul>
 							</li>
 							<li>
@@ -310,9 +311,108 @@ Mysqlx.Crud.Find {
 								<ul>
 									<li>Generators</li>
 									<li>Async/await</li>
+									<li>Other userland experiments</li>
 								</ul>
 							</li>
 						</ul>
+					</section>
+					<section id="nodejs-callbacks">
+						<p>Callback pattern</p>
+						<pre>
+							<code class="js" data-trim data-noescape>
+							const asyncFn = (success, callback) => {
+							  setTimeout(() => {
+							    if (!success) return callback(new Error('bar'))
+							    callback(null, 'foo')
+							  }, 1000);
+							}
+
+							asyncFn(true, (err, data) => {
+							  console.log(data) // foo
+							})
+
+							asyncFn(false, (err) => {
+							  console.log(err.message) // bar
+							})
+							</code>
+						</pre>
+					</section>
+					<section id="nodejs-push-event-emitter">
+						<p>Event emitter</p>
+						<pre>
+							<code class="js" data-trim data-noescape>
+							const emitter = new EventEmitter()
+
+							emitter.on('someEvent', message => {
+							  console.log(message) // foo
+							})
+
+							emitter.emit('someEvent', 'foo')
+							</code>
+						</pre>
+					</section>
+					<section id="nodejs-push-stream">
+						<p>Streams</p>
+						<pre>
+							<code class="js" data-trim data-noescape>
+							const readable = new Stream.Readable()
+							const writable = new Stream.Writable()
+
+							readable.on('data', data => {
+							  console.log(data) // foo
+							})
+
+							readable.pipe(writable)
+							writable.write('foo')
+							</code>
+						</pre>
+					</section>
+					<section id="nodejs-push-promise">
+						<p>Promises</p>
+						<pre>
+							<code class="js" data-trim data-noescape>
+							const promise1 = Promise.resolve('foo')
+							const promise2 = Promise.reject(new Error('bar'))
+
+							promise1.then(data => {
+							  console.log(data) // foo
+							})
+
+							promise2.catch(err => {
+							  console.log(err.message) // bar
+							})
+							</code>
+						</pre>
+					</section>
+					<section id="nodejs-pull-generators">
+						<p>Generators</p>
+						<pre>
+							<code class="js" data-trim data-noescape>
+							const gen = function * () {
+							  yield 'foo'
+							  return 'bar'
+							}
+
+							console.log(gen.next()) // { value: 'foo', done: false }
+							console.log(gen.next()) // { value: 'bar', done: true }
+							</code>
+						</pre>
+					</section>
+					<section id="nodejs-pull-async-await">
+						<p>Async/await</p>
+						<pre>
+							<code class="js" data-trim data-noescape>
+							const promise1 = Promise.resolve('foo')
+							const promise2 = Promise.reject(new Error('bar'))
+
+							try {
+							  console.log(await promise1) // 'foo'
+							  await promise2
+							} catch (err) {
+							  console.log(err.message) // 'bar'
+							}
+							</code>
+						</pre>
 					</section>
 				</section>
 				<section>
