@@ -40,7 +40,7 @@
 					<aside class="notes">
 						Also point to MySQLers in audience!
 						<ul>
-							<li>Geir? - Server lead</li>
+							<li>Geir? - Senior Director of Server Development</li>
 							<li>Jan? - DocStore Architect, Server Plugin lead</li>
 							<li>LeFred? - Community, InnoDB Cluster expert</li>
 							<li>Others!</li>
@@ -166,17 +166,81 @@
 						</ul>
 					</section>
 					<section>
-						TODO:Johannes Show pure SQL access ...
+						<p>Access using SQL</p>
+						<pre>
+							<code class="sql" data-trim data-noescape>
+							CREATE TABLE collection (doc JSON);
+							INSERT INTO collection VALUES ('{ "type":"node" … }');
+							<span class="fragment" data-fragment-index="1">
+							ALTER TABLE collection ADD COLUMN wheelchair 
+							              VARCHAR(255) GENERATED ALWAYS
+								      AS (json_unquote(json_extract(doc, '$.tags.wheelchair')))
+								      STORED
+								      KEY;
+							</span><span class="fragment" data-fragment-index="2">
+							SELECT * FROM collection WHERE wheelchair != 'no';
+							SELECT * FROM collection WHERE json_unquote(doc->'$.tags.wheelchair') != 'no';
+							</span>
+							</code>
+						</pre>
 					</section>
 				</section>
 				<section>
 					<!-- Johannes: -->
-					<!-- ~5 minutes -->
+					<!-- ~2 minutes -->
+					<!-- <h2>Interlude with no title</h2> -->
+					<section>
+						<p>MySQL is a Great Database</p>
+						<ul>
+							<li>Powerful Features</li>
+							<li>InnoDB</li>
+							<li>Replication, Group Commit, ...</li>
+							<li>Proven and Stable</li>
+						</ul>
+					</section>
+					<section>
+						<p>Document Databases</p>
+						<ul>
+							<li>Simple to setup</li>
+							<li>Higher level APIs</li>
+						</ul>
+					</section>
+					<section data-background="images/dolphin-background-grey.png">
+						<h3>So, why not combine both!?</h3>
+					</section>
+				</section>
+				<section>
+					<!-- Johannes: -->
+					<!-- ~3 minutes -->
 					<h2>MySQL Document Store</h2>
-					<section>Introduced with 5.7.?, new protocol, common set of APIs</section>
-					<section>MySQL Shell</section>
-					<section>Support for C++, Java, .Net (C# etc.), Python, PHP</section>
-					<section>Terms to clarify in this section: Collection, Document, ...</section>
+					<section>
+						<p>An X-Over between a relational database and a document database</p>
+					</section>
+					<section>
+						<ul>
+							<li>Built upon a new protocol, the X Protocol</li>
+							<li>Implementing a common API over multiple languages and environments
+								<ul>
+									<li>C++, Java, .Net, Node.JS, Python. PHP</li>
+									<li>New MySQL Shell</li>
+									<li>Easy CRUD operations on relational tables and document database style collections</li>
+								</ul>
+							</li>
+							<li>Based on proven MySQL foundation</li>
+						</ul>
+						<aside class="notes">
+						<p>Learn more about the MySQL Shell tomorrow in LeFred's session on InnoDB Cluster</p>
+						</aside>
+					</section>
+					<section>
+						<p>Collections</p>
+						<ul>
+							<li>An <i>Collection</i> is a set of JSON Documents</li>
+							<li>Each document has it's unique ID in an <i>_id</i> property</li>
+							<li>Easy to search within documents</li>
+							<li>Implemented as a table with a JSON column and indexes on generated columns</li>
+						</ul>
+					</section>
 				</section>
 				<section>
 					<!-- Johannes: -->
@@ -269,8 +333,17 @@ Mysqlx.Crud.Find {
 				</section>
 				<section data-external="sections/links.html"></section>
 				<section>
-					<!-- ~5 minutes -->
-					<p>Thank You &amp; Pointer to InnoDB Cluster &amp; DocStore Session by Jan</p>
+					<section>
+						<h2>Some related Sessions Tomorrow</h2>
+						<ul>
+							<li><b>9:15AM</b> State of the Dolphin (Keynote by Geir Høydalsvik)</li>
+							<li><b>11:20AM</b> Introduction to MySQL InnoDB Cluster (Frederic Descamps, Jan Kneschke)</li>
+							<li><b>4:55PM</b> MySQL Document Store (Frederic Descamps, Jan Kneschke)</li>
+						</ul>
+					</section>
+					<section>
+						<h2>Thank You</h2>
+					</section>
 				</section>
 				<section>
 					<img src="images/dolphin.jpg" style="border:0px;">
