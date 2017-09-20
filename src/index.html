@@ -275,18 +275,19 @@ Mysqlx.Crud.Find {
 					<section id="nodejs-overview">
 						<p class="list-header">Overview</p>
 						<ul>
-							<li>Asynchronous event driven JavaScript runtime</li>
-							<li>Non-blocking IO core</li>
-							<li>Single-threaded environment (it's JavaScript after all)</li>
-							<li>Blocking operations defered to an <a href="https://www.youtube.com/watch?v=8aGhZQkoFbQ">event loop</a></li>
+							<li>Asynchronous event driven JavaScript server runtime</li>
+							<li>Non-blocking IO through the <a href="https://www.youtube.com/watch?v=8aGhZQkoFbQ">event loop</a></li>
 							<li>HTTP as a first-class citizen</li>
+							<li>Filesystem, OS, network (TCP/UDP) and TLS</li>
 							<li>Out-of-the box streaming APIs</li>
+							<li>Bindings for C/C++ native addons</li>
 							<li>Unified module system and package manager (npm)</li>
 						</ul>
 					</section>
 					<section id="nodejs-programming-model">
 						<p class="list-header">Programming model</p>
 						<ul>
+							<li>Single-threaded environment (it's JavaScript after all)</li>
 							<li>Asynchronous callback-based at its core</li>
 							<li>Non-blocking (CPU-bound tasks, memory access, etc.) operations executed sequentially</li>
 							<li>Blocking (network/disk access, etc.) operations queued outside execution scope</li>
@@ -303,7 +304,6 @@ Mysqlx.Crud.Find {
 									<li>Event emitters</li>
 									<li>Streams (special kind of event emitters)</li>
 									<li>Promises</li>
-									<li>Other userland experiments</li>
 								</ul>
 							</li>
 							<li>
@@ -311,9 +311,9 @@ Mysqlx.Crud.Find {
 								<ul>
 									<li>Generators</li>
 									<li>Async/await</li>
-									<li>Other userland experiments</li>
 								</ul>
 							</li>
+							<li>Many other userland experiments of both kinds</li>
 						</ul>
 					</section>
 					<section id="nodejs-callbacks">
