@@ -273,13 +273,45 @@ Mysqlx.Crud.Find {
 						</blockquote>
 					</section>
 					<section id="nodejs-overview">
-						<p>Overview</p>
+						<p class="list-header">Overview</p>
 						<ul>
-							<li>async</li>
-							<li>callbacks, promises, async/await</li>
-							<li>single-threaded</li>
-							<li>event loop</li>
-							<li></li>
+							<li>Asynchronous event driven JavaScript runtime</li>
+							<li>Non-blocking IO core</li>
+							<li>Single-threaded environment (it's JavaScript after all)</li>
+							<li>Blocking operations defered to an <a href="https://www.youtube.com/watch?v=8aGhZQkoFbQ">event loop</a></li>
+							<li>HTTP as a first-class citizen</li>
+							<li>Out-of-the box streaming APIs</li>
+							<li>Unified module system and package manager (npm)</li>
+						</ul>
+					</section>
+					<section id="nodejs-programming-model">
+						<p class="list-header">Programming model</p>
+						<ul>
+							<li>Asynchronous callback-based at its core</li>
+							<li>Non-blocking (CPU-bound tasks, memory access, etc.) operations executed sequentially</li>
+							<li>Blocking (network/disk access, etc.) operations queued outside execution scope</li>
+							<li>Result of a blocking operation is handled "eventually"</li>
+							<li>Concurrency achieved through V8 (threading) or multiple processes</li>
+						</ul>
+					</section>
+					<section id="node-js-dealing-with-asynchronicity">
+						<p class="list-header">Dealing with asynchronicity</p>
+						<ul>
+							<li>
+								Push-based abstractions for asynchronous callbacks:
+								<ul>
+									<li>Event emitters</li>
+									<li>Streams (special kind of event emitters)</li>
+									<li>Promises</li>
+								</ul>
+							</li>
+							<li>
+								Pull-based abstractions for asynchronous callbacks:
+								<ul>
+									<li>Generators</li>
+									<li>Async/await</li>
+								</ul>
+							</li>
 						</ul>
 					</section>
 				</section>
