@@ -1,3 +1,5 @@
+<!-- Rui: -->
+<!-- ~4 minutes -->
 <h2>Putting everything together</h2>
 <section id="cnodejs-snippet-boilerplate">
     <p>Boilerplate, sessions and schemas</p>
@@ -114,7 +116,7 @@
     <p>Transaction Support</p>
     <pre>
         <code class="js" data-trim data-noescape>
-        <span class="fragment">try {
+        try {
         <span class="fragment">    await session.startTransaction()</span>
 
         <span class="fragment">    const result = await schema.getCollection('beers')
@@ -126,7 +128,7 @@
         <span class="fragment">    await session.commit()</span>
         } catch (err) {
         <span class="fragment">    await session.rollback()</span>
-        }</span>
+        }
         </code>
     </pre>
 </section>

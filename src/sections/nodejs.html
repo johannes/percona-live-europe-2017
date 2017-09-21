@@ -1,5 +1,5 @@
 <!-- Rui: -->
-<!-- ~5 minutes -->
+<!-- ~12 minutes -->
 <h2>Node.js</h2>
 <section id="nodejs-intro">
     <p>(straight) from the <a href="https://nodejs.org/en/">horse's mouth</a></p>
@@ -12,25 +12,91 @@
 <section id="nodejs-overview">
     <p class="list-header">Overview</p>
     <ul>
-        <li>Asynchronous event driven JavaScript server runtime</li>
-        <li>Non-blocking IO through the <a href="https://www.youtube.com/watch?v=8aGhZQkoFbQ">event loop</a></li>
+        <li>JavaScript server runtime on top of <a href="https://github.com/v8/v8">V8</a></li>
         <li>HTTP as a first-class citizen</li>
         <li>Filesystem, OS, network (TCP/UDP) and TLS</li>
         <li>Out-of-the box streaming APIs</li>
+        <li>Non-blocking IO through the <a href="https://www.youtube.com/watch?v=8aGhZQkoFbQ">event loop</a></li>
         <li>Bindings for C/C++ native addons</li>
-        <li>Unified module system and package manager (npm)</li>
+        <li>Unified module system (<a href="https://nodejs.org/docs/latest/api/modules.html">CommonJS</a>) and package manager (<a href="https://docs.npmjs.com/">npm</a>)</li>
     </ul>
+    <aside class="notes">
+        <p>
+            So, Node.js is basically JavaScript in the server. It's runtime environment on top of
+            Google's V8, which is the JavaScript engine ("compiler") used by Google Chrome. Node.js is written
+            partially in JavaScript and partially in C/C++. V8 is just C++.
+        </p>
+        <p>
+            "In the server" means that HTTP is a first-class citizen, which means you can spin up a Node.js app
+            (basically just a script) and start listening to HTTP requests and send out responses without
+            the need for an application server or any specific external tool like nginx or Apache.
+        </p>
+        <p>
+            It also means, of course, that it provides APIs to access the filesystem, OS stuff, network
+            interfaces and packets as well as other things like out-of-the-box TLS support via OpenSSL.
+        </p>
+        <p>
+            Most of these APIs streamings interfaces which you can use to compose small and
+            self-contained modules or functions that work together to achieve bigger purposes, similar to
+            the unix philosophy, and the use of unix pipes.
+        </p>
+        <p>
+            It provides an event-loop to handle blocking I/O operations outside the main execution scope
+            (more on this in a minute).
+        </p>
+        <p>
+            If JS does not cut it, you can always write code in C or C++ and easily plug it
+            in your Node.js project through an addon, and use it like any other module via the
+            available bindings API.
+        </p>
+        <p>
+            It unifies the module system by providing the same API to access both internal and external
+            (3rd-party) modules via the CommonJS standard and NPM (Node Package Manager).
+        </p>
+        <p>
+            NPM is an essential piece in the process of developing Node.js applications. Besides being
+            the module system glue, it also provides support for things such as downloading and installing
+            dependencies, running tests, setting up build systems/pipelines and a bunch of other stuff.
+        </p>
+    </aside>
 </section>
 <section id="nodejs-programming-model">
     <p class="list-header">Programming model</p>
     <ul>
         <li>Single-threaded environment (it's JavaScript after all)</li>
-        <li>Asynchronous callback-based at its core</li>
-        <li>Non-blocking (CPU-bound tasks, memory access, etc.) operations executed sequentially</li>
-        <li>Blocking (network/disk access, etc.) operations queued outside execution scope</li>
+        <li>Asynchronous callback-based core</li>
+        <li>Non-blocking operations run immediatelly and sequentially</li>
+        <li>Blocking operations queued outside execution scope</li>
         <li>Result of a blocking operation is handled "eventually"</li>
-        <li>Concurrency achieved through V8 (threading) or multiple processes</li>
+        <li>Concurrency with C++ APIs (threads) or multiple processes</li>
     </ul>
+    <aside class="notes">
+        <p>
+            Since JavaScript (the runtime) is single threaded, multi-tasking is achieved through the use of an
+            event loop (which is implemented by libuv, a C library that is part of node core).
+        </p>
+        <p>
+            The event loop is basically a loop that runs outside the runtime execution scope, checks if the
+            runtime call stack is empty and picks tasks that were queued by some API, runs them and pushes
+            the result back into the stack. The event loop should, in the best case scenario, handle all
+            blocking (thus asynchronous) operations.
+        </p>
+        <p>
+            The "native" way to defer work to the event loop is by registering a callback (which is just a function)
+            that should be called when the result of an asynchronous operation is ready. This is the way things work
+            on the core library, but there are a few abstractions over this pattern that I'll touch in a bit.
+        </p>
+        <p>
+            Non-blocking operations such as CPU-bound tasks, memory access, etc. run immediatelly and sequentially
+            (as soon as the instructions get evaluated). Whereas blocking operations such as network/disk access,
+            asynchronous in nature, should be handled eventually by the event loop, outside the main execution scope.
+        </p>
+        <p>
+            Despite being single threaded, real concurrency can be achieved through V8 (which provides access to threads)
+            or by spinning up additional Node.js processes (similar to other scripting languages). This is useful
+            for handling stuff like CPU intensive workloads without blocking I/O operations.
+        </p>
+    </aside>
 </section>
 <section id="nodejs-dealing-with-asynchronicity">
     <p class="list-header">Dealing with asynchronicity</p>
@@ -73,6 +139,20 @@
             })
         </code>
     </pre>
+    <aside class="notes">
+        <p>
+            This is just a naive async-like function which delays the execution of something.
+        </p>
+        <p>
+            <span class="inline">setTimeout()</span> "triggers" the process of defering a task to
+            the event loop. Another function that does that is <span class="inline">process.nextTick()</span>
+            which is used internally by the asynchronous functions of the core API.
+        </p>
+        <p>
+            Follow the error-first pattern, because that's the flavour used in the core library,
+            however there is no rule for this (can be a source of confusion).
+        </p>
+    </aside>
 </section>
 <section id="nodejs-push-event-emitter">
     <p>Event emitter</p>
@@ -87,6 +167,15 @@
         emitter.emit('someEvent', 'foo')
         </code>
     </pre>
+    <aside class="notes">
+        <p>
+            This is another abstraction available in the core library, which is basically
+            inspired by the observer pattern.
+        </p>
+        <p>
+            User can extend its own objects to be event emitters.
+        </p>
+    </aside>
 </section>
 <section id="nodejs-push-stream">
     <p>Streams</p>
@@ -103,6 +192,21 @@
         writable.write('foo')
         </code>
     </pre>
+    <aside class="notes">
+        <p>
+            Streams are just a special case of an event emitter.
+        </p>
+        <p>
+            They follow a strict API to allow composition.
+        </p>
+        <p>
+            There are readable, writable, duplex (both) and transform streams.
+        </p>
+        <p>
+            User can extend its own objects to be streams (as long as the API
+            rules are not violated).
+        </p>
+    </aside>
 </section>
 <section id="nodejs-push-promise">
     <p>Promises</p>
@@ -120,6 +224,27 @@
         })
         </code>
     </pre>
+    <aside class="notes">
+        <p>
+            Promises, unlinke the previous two, are a language construct.
+        </p>
+        <p>
+            They are available because V8 supports a version of ECMAScript (the JS standard)
+            that provides their specification.
+        </p>
+        <p>
+            They were introduced to appease people who think callbacks were confusing, but
+            I think they might be even more confusing.
+        </p>
+        <p>
+            Provide a standard API to handle results and errors of asynchronous operations,
+            trough the <span class="inline">then()</span> and <span class="inline">catch()</span> methods.
+        </p>
+        <p>
+            Both methods get passed (you've guessed it) a callback handler, albeit one with
+            a standard signature (just a single parameter).
+        </p>
+    </aside>
 </section>
 <section id="nodejs-pull-generators">
     <p>Generators</p>
@@ -134,20 +259,47 @@
         console.log(gen.next()) // { value: 'bar', done: true }
         </code>
     </pre>
+    <aside class="notes">
+        <p>
+            Another language construct. Special kind of function that can stop execution and
+            yield its current state.
+        </p>
+        <p>
+            The execution is then resumed by the function caller in a cursor-based fashion,
+            making it pull-based, and not push-based like the previous examples.
+        </p>
+    </aside>
 </section>
 <section id="nodejs-pull-async-await">
     <p>Async/await</p>
     <pre>
         <code class="js" data-trim data-noescape>
-        const promise1 = Promise.resolve('foo')
-        const promise2 = Promise.reject(new Error('bar'))
+        const asyncFn1 = () => Promise.resolve('foo')
+        const asyncFn2 = () => Promise.reject(new Error('bar'))
 
-        try {
-            console.log(await promise1) // 'foo'
-            await promise2
-        } catch (err) {
-            console.log(err.message) // 'bar'
-        }
+        (async function () {
+            try {
+                const value = await asyncFn1();
+                console.log(value) // 'foo'
+                await asyncFn2()
+            } catch (err) {
+                console.log(err.message) // 'bar'
+            }
+        }())
         </code>
     </pre>
+    <aside class="notes">
+        <p>
+            Again, a language construct. This one to appease hardcore fans of serial code,
+            particularly, newcomers from C#.
+        </p>
+        <p>
+            It's basically syntatic sugar for promises. It wraps the outcome of an asynchronous
+            operation in a way that can be handled by the caller as if it was a synchronous.
+        </p>
+        <p>
+            Notice that in order for this to work, we need to wrap instructions that use "await"
+            inside an "async" function block.
+        </p>
+    </aside>
 </section>

@@ -1,5 +1,5 @@
 <!-- Rui: -->
-<!-- ~15 minutes -->
+<!-- ~6 minutes -->
 <h2>MySQL Connector/Node.js</h2>
 <section id="cnodejs-overview">
     <p class="list-header">Overview</p>
@@ -11,6 +11,19 @@
         <li>Fluent/chainable API (out-of-the-box query builder)</li>
         <li>Flexible parameter methods</li>
     </ul>
+    <aside class="notes">
+        <p>
+            It's the official library to work with MySQL on Node.js (official, because its maintained by Oracle).
+        </p>
+        <p>
+            It has a fluent database operation API, which means you have an out-of-the-box query builder,
+            and don't need to write SQL statements for everything.
+        </p>
+        <p>
+            Most public methods support a flexible parameter format, meaning you can either use multiple
+            arguments, a single array of arguments, or an object with named arguments (when it applies).
+        </p>
+    </aside>
 </section>
 <section id="cnodejs-features">
     <p class="list-header">Some features</p>
@@ -23,6 +36,13 @@
         <li>Authentication</li>
         <li>Configuration handling interface</li>
     </ul>
+    <aside class="notes">
+        <p>
+            The configuration handling interface allows you to save connection properties using
+            user or system-wide configuration files and use them when creating sessions, instead of
+            being constantly writing connection strings or building configuration objects.
+        </p>
+    </aside>
 </section>
 <section id="cnodejs-features-fluent-api">
     <p>Fluent API (Document Store)</p>
@@ -37,6 +57,14 @@
             collection.remove('$.name == "bar"').execute()
         </code>
     </pre>
+    <aside class="notes">
+        <p>
+            As we can see here, we can keep chaining methods to build a database operation and
+            the respective query. Each method just returns back the current operation instance
+            until execute() gets called, which will effectively send the query to the server,
+            returning a promise in that case.
+        </p>
+    </aside>
 </section>
 <section id="cnodejs-features-fluent-api-interface">
     <p>Database operations</p>
@@ -91,6 +119,12 @@
                 .execute()
         </code>
     </pre>
+    <aside class="notes">
+        <p>
+            Currently, if you want to create indexes, you actually have to resort to
+            plain SQL, because there is still no DevAPI method for that.
+        </p>
+    </aside>
 </section>
 <section id="cnodejs-features-async">
     <p>Asynchronous API <=> <span class="inline">Promise</span></p>
@@ -103,6 +137,18 @@
         <li><span class="inline">execute()</span></li>
         <li>&hellip;</li>
     </ul>
+    <aside class="notes">
+        <p>
+            These are some of the examples of asynchronous methods in the API.
+        </p>
+        <p>
+            Again, querys built with database operations are sent to server with execute().
+        </p>
+        <p>
+            Every other method is basically boilerplate you might need before creating those operations.
+            Creating sessions, schemas and collections (or removing them).
+        </p>
+    </aside>
 </section>
 <section id="cnodejs-features-cursors">
     <p>Simple push-based "cursors"</p>
@@ -116,6 +162,16 @@
             collection.find().execute(cursor)
         </code>
     </pre>
+    <aside class="notes">
+        <p>
+            How do you handle result set data? You just pass a function as an argument of
+            execute(), and the function will be called with each document instance that is
+            processed in real-time.
+        </p>
+        <p>
+            Just as a side note. There are also cursors for handling operation metadata.
+        </p>
+    </aside>
 </section>
 <section id="cnodejs-features-completion">
     <p>Operation completion</p>
@@ -132,6 +188,15 @@
                 })
         </code>
     </pre>
+    <aside class="notes">
+        <p>
+            Metadata is also available when the operation finishes.
+        </p>
+        <p>
+            The execute() method returns a promise that resolves to a Result object,
+            or fails with a error, if something went wrong.
+        </p>
+    </aside>
 </section>
 <section id="cnodejs-features-results">
     <p><span class="inline">Result</span></p>
@@ -143,4 +208,10 @@
         <li><span class="inline">getWarningsCount()</span></li>
         <li>&hellip;</li>
     </ul>
+    <aside class="notes">
+        <p>
+            That resolve object provides some utility methods to retrieve metadata
+            about the operation that was executed.
+        </p>
+    </aside>
 </section>
