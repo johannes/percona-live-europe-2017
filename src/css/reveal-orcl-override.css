@@ -100,7 +100,16 @@ body:before {
 
 .reveal .main-title {
   font-size: 2.2em;
-  margin-bottom: 0.25em;
+}
+
+.reveal .main-subtitle {
+  font-size: 0.85em;
+  font-weight: bold;
+  margin-bottom: 2em;
+}
+
+.reveal .authors {
+  font-size: 0.85em;
 }
 
 .reveal li {
