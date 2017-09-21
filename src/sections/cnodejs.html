@@ -28,13 +28,13 @@
     <p>Fluent API (Document Store)</p>
     <pre>
         <code class="js" data-trim data-noescape>
-        collection.add({ name: 'foo' }).add({ name: 'bar' }).execute()
+            collection.add({ name: 'foo' }).add({ name: 'bar' }).execute()
 
-        collection.find('$.name == :name').bind(name, 'foo').execute()
+            collection.find('$.name == :name').bind(name, 'foo').execute()
 
-        collection.modify('$.name == "foo"').set('$.name', 'qux').execute()
+            collection.modify('$.name == "foo"').set('$.name', 'qux').execute()
 
-        collection.remove('$.name == "bar"').execute()
+            collection.remove('$.name == "bar"').execute()
         </code>
     </pre>
 </section>
@@ -42,17 +42,17 @@
     <p>Database operations</p>
     <pre>
         <code class="js" data-trim data-noescape>
-        // CollectionAdd
-        const addOperation = collection.add()
+            // CollectionAdd
+            const addOperation = collection.add()
 
-        // CollectionFind
-        const findOperation = collection.find()
+            // CollectionFind
+            const findOperation = collection.find()
 
-        // CollectionModify
-        const modifyOperation = collection.modify()
+            // CollectionModify
+            const modifyOperation = collection.modify()
 
-        // CollectionRemove
-        const removeOperation = collection.remove()
+            // CollectionRemove
+            const removeOperation = collection.remove()
         </code>
     </pre>
 </section>
@@ -76,18 +76,19 @@
     <p>Fallback to plain-old SQL</p>
     <pre>
         <code class="js" data-trim data-noescape>
-        // insert document into a collection
-        session.sql(`INSERT INTO collection (doc) values ('{"_id":"foo","name":"bar"}')`)
-          .execute()
+            // insert document into a collection
+            session.sql(`INSERT INTO pubs (doc) VALUES
+                    ('{"_id":132777284,"tags":{"name":"foo"}}')`)
+                .execute()
 
-        // project "name" property values
-        session.sql(`SELECT JSON_EXTRACT(doc, '$.name') FROM collection`)
-          .execute()
+            // project "name" property values
+            session.sql(`SELECT JSON_EXTRACT(doc, '$.tags.name') FROM pubs`)
+                .execute()
 
-        // create a virtual column and use it as an index
-        session.sql(`ALTER TABLE collection ADD COLUMN name TEXT(3) GENERATED ALWAYS AS
-            (JSON_EXTRACT(doc, '$.name')) VIRTUAL, ADD INDEX i_name (name)`)
-          .execute()
+            // create a virtual column and use it as an index
+            session.sql(`ALTER TABLE collection ADD COLUMN name TEXT(50) GENERATED ALWAYS AS
+                    (JSON_EXTRACT(doc, '$.tags.name')) VIRTUAL, ADD INDEX i_name (name)`)
+                .execute()
         </code>
     </pre>
 </section>
@@ -107,12 +108,12 @@
     <p>Simple push-based "cursors"</p>
     <pre>
         <code class="js" data-trim data-noescape>
-        // the cursor gets executed for each element of the result set
-        function cursor (p) {
-            // p: result set element currently being processed
-        }
+            // the cursor gets executed for each element of the result set
+            function cursor (p) {
+                // p: result set element currently being processed
+            }
 
-        collection.find().execute(cursor)
+            collection.find().execute(cursor)
         </code>
     </pre>
 </section>
@@ -120,15 +121,15 @@
     <p>Operation completion</p>
     <pre>
         <code class="js" data-trim data-noescape>
-        collection
-          .find()
-          .execute()
-          .then(function (r) {
-            // r: instance of Result (coming up next)
-          })
-          .catch(function (e) {
-            // e: instance of Error
-          })
+            collection
+                .find()
+                .execute()
+                .then(function (r) {
+                    // r: instance of Result (coming up next)
+                })
+                .catch(function (e) {
+                    // e: instance of Error
+                })
         </code>
     </pre>
 </section>

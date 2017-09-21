@@ -57,20 +57,20 @@
     <p>Callback pattern</p>
     <pre>
         <code class="js" data-trim data-noescape>
-        const asyncFn = (success, callback) => {
-            setTimeout(() => {
-            if (!success) return callback(new Error('bar'))
-            callback(null, 'foo')
-            }, 1000);
-        }
+            const asyncFn = (success, callback) => {
+                setTimeout(() => {
+                    if (!success) return callback(new Error('bar'))
+                    callback(null, 'foo')
+                }, 1000);
+            }
 
-        asyncFn(true, (err, data) => {
-            console.log(data) // foo
-        })
+            asyncFn(true, (err, data) => {
+                console.log(data) // foo
+            })
 
-        asyncFn(false, (err) => {
-            console.log(err.message) // bar
-        })
+            asyncFn(false, (err) => {
+                console.log(err.message) // bar
+            })
         </code>
     </pre>
 </section>

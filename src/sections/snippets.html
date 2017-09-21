@@ -1,15 +1,20 @@
 <h2>Putting everything together</h2>
 <section id="cnodejs-snippet-boilerplate">
-    <p>Boilerplate (sessions and schemas)</p>
-    <pre>
+    <p>Boilerplate, sessions and schemas</p>
+    <pre style="height: 1.8em;">
+        <code class="sh" data-trim data-noescape>
+        $ npm install @mysql/xdevapi
+        </code>
+    </pre>
+    <pre class="fragment">
         <code class="js" data-trim data-noescape>
         const mysqlx = require('@mysql/xdevapi')
 
-        const session = await mysqlx.getSession('mysqlx://demo@localhost:33060')
+        <span class="fragment">const session = await mysqlx.getSession('mysqlx://demo@localhost:33060')</span>
 
-        // re-create the schema
+        <span class="fragment">// re-create the schema
         await session.dropSchema('ple2017')
-        const schema = await session.createSchema('ple2017')
+        const schema = await session.createSchema('ple2017')</span>
         </code>
     </pre>
 </section>
@@ -19,12 +24,12 @@
         <code class="js" data-trim data-noescape>
         const schema = session.getSchema('ple2017')
 
-        // re-create a collection
-        await schema.dropCollection('demo')
-        await schema.createCollection('demo')
+        <span class="fragment">// re-create a collection
+        await schema.dropCollection('pubs')
+        await schema.createCollection('pubs')</span>
 
-        // or re-use an existing collection
-        const collection = schema.createCollection('demo', { ReuseExistingObject: true })
+        <span class="fragment">// or re-use an existing collection
+        const collection = schema.createCollection('pubs', { ReuseExistingObject: true })</span>
         </code>
     </pre>
 </section>
@@ -32,13 +37,20 @@
     <p><b class="orcl-red">C</b>REATE</p>
     <pre>
         <code class="js" data-trim data-noescape>
-        const collection = schema.getCollection('demo')
+        const collection = schema.getCollection('pubs')
 
-        // pipelining parallel calls
+        <span class="fragment">// pipelining parallel calls
         await Promise.all([
-            collection.add({ name: 'foo' }).execute(),
-            collection.add([{ name: 'bar' }, { name: 'baz' }]).execute()
-        ])
+        <span class="fragment">    collection
+                .add({ type: 'node', _id: 132775981, ... })
+                .execute(),</span>
+        <span class="fragment">    collection
+                .add([
+                    { type: 'node', _id: 132775992, ... },
+                    { type: 'node', _id: 132776246, ... }
+                ])
+                .execute()</span>
+        ])</span>
         </code>
     </pre>
 </section>
@@ -46,14 +58,14 @@
     <p><b class="orcl-red">R</b>EAD</p>
     <pre>
         <code class="js" data-trim data-noescape>
-        const collection = schema.getCollection('demo')
-        const docs = []
+        const collection = schema.getCollection('pubs')
 
+        <span class="fragment">const pubs = []
         await collection
             .find()
-            .execute(doc => doc && docs.push(doc))
+            .execute(pub => pub && pubs.push(pub))</span>
 
-        console.log(docs) // [{ name: 'foo' }, { name: 'bar' }, { name: 'baz' }]
+        <span class="fragment">console.log(pubs) // [{ _id: 132775981, ... }, { id: 132775992, ... }, ... ]</span>
         </code>
     </pre>
 </section>
@@ -61,20 +73,20 @@
     <P><b class="orcl-red">U</b>PDATE</P>
     <pre>
         <code class="js" data-trim data-noescape>
-        const collection = schema.getCollection('demo')
-        const docs = []
+        const collection = schema.getCollection('pubs')
 
-        await collection
-            .modify('$.name == "foo"')
-            .set('name', 'qux')
-            .set('oldName', 'foo')
-            .execute()
+        <span class="fragment">await collection
+            .modify('$.id == 132775981')
+            .set('type', 'foo')
+            .set('oldType', 'node')
+            .execute()</span>
 
+        <span class="fragment">const pubs = []
         await collection
             .find()
-            .execute(doc => doc && docs.push(doc))
+            .execute(pub => pub && pubs.push(pub))</span>
 
-        console.log(docs) // [{ name: 'qux', oldName: 'foo' }, { name: 'bar' }, ... ]
+        <span class="fragment">console.log(pubs) // [{ type: 'foo', _id: 132775981, oldType: 'node' }, ... ]</span>
         </code>
     </pre>
 </section>
@@ -82,18 +94,19 @@
     <p><b class="orcl-red">D</b>ELETE</p>
     <pre>
         <code class="js" data-trim data-noescape>
-        const collection = schema.getCollection('demo')
-        const docs = []
+        const collection = schema.getCollection('pubs')
 
-        await collection
-            .remove('$.name == "qux"')
-            .execute()
+        <span class="fragment">await collection
+            .remove('$.type == "foo"')
+            .execute()</span>
 
+        <span class="fragment">const pubs = []
         await collection
             .find()
-            .execute(doc => doc && docs.push(doc))
+            .execute(pub => pub && pubs.push(pub))</span>
 
-        console.log(docs) // [{ name: 'bar' }, { name: 'baz' }]
+        <span class="fragment">console.log(pubs)
+        // [{ type: 'node', _id: 132775992, ... }, { type: 'node', _id: 132776246, ... }]</span>
         </code>
     </pre>
 </section>
@@ -101,19 +114,19 @@
     <p>Transaction Support</p>
     <pre>
         <code class="js" data-trim data-noescape>
-        try {
-            await session.startTransaction()
+        <span class="fragment">try {
+        <span class="fragment">    await session.startTransaction()</span>
 
-            const result = await schema.getCollection('child')
-            .add({ name: 'foo', parent: 'bar' })
+        <span class="fragment">    const result = await schema.getCollection('beers')
+                .add({ name: 'Guiness', pubs: [ 132775992 ] })</span>
 
-            await schema.getCollection('parent').modify('$._id == "bar"')
-            .arrayAppend('tracking', result.getDocumentId())
+        <span class="fragment">    await schema.getCollection('pubs').modify('$._id == 132775992')
+                .arrayAppend('beers', result.getDocumentId())</span>
 
-            await session.commit()
+        <span class="fragment">    await session.commit()</span>
         } catch (err) {
-            await session.rollback()
-        }
+        <span class="fragment">    await session.rollback()</span>
+        }</span>
         </code>
     </pre>
 </section>
