@@ -87,10 +87,6 @@ body:before {
   background: #ff0000;
 }
 
-.reveal .list-header {
-  font-weight: bold
-}
-
 .reveal .inline {
   font-family: "Source Code Pro", monospace;
   font-style: italic;
@@ -100,6 +96,19 @@ body:before {
 .reveal img.ebnf {
   border: none;
   box-shadow: none;
+}
+
+.reveal .main-title {
+  font-size: 2.2em;
+  margin-bottom: 0.25em;
+}
+
+.reveal li {
+  font-size: 0.85em;
+}
+
+.reveal li li {
+  font-size: 0.71em;
 }
 
 .orcl-red {
