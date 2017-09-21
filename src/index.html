@@ -26,7 +26,15 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section data-background="images/mysql_bg.jpg" class="mysql-full">MySQL Document Store</section>
+				<section data-background="images/mysql_bg.jpg" class="mysql-full">
+					<div style="font-size: 48px; margin-bottom: 1em;">MySQL Document Store</div>
+					<div style="font-size: 24px;">
+						<div>Johannes Schlüter</div>
+						<div>Rui Quelhas</div>
+						<div>MySQL Clients and Middleware</div>
+						<div>September 2017</div>
+					</div>
+				</section>
 				<section data-external="sections/welcome.html"></section>
 				<section data-external="sections/unstructured.html"></section>
 				<section data-external="sections/interlude.html"></section>
@@ -81,7 +89,9 @@
 			});
 
 			Reveal.configure({
-				slideNumber: true
+				margin: 0,
+				slideNumber: true,
+				width: 1080
 			});
 		</script>
 	</body>
