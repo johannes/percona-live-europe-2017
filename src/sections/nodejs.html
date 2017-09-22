@@ -22,41 +22,42 @@
     </ul>
     <aside class="notes">
         <p>
-            So, Node.js is basically JavaScript in the server. It's runtime environment on top of
-            Google's V8, which is the JavaScript engine ("compiler") used by Google Chrome. Node.js is written
-            partially in JavaScript and partially in C/C++. V8 is just C++.
+            So, Node.js is basically JavaScript in the server. It's a runtime environment on top of
+            Google's V8, which is the JavaScript engine ("compiler") powering Google Chrome. Node.js is written
+            partially in JavaScript and partially in C/C++. V8 is wirtten in C++.
         </p>
         <p>
             "In the server" means that HTTP is a first-class citizen, which means you can spin up a Node.js app
-            (basically just a script) and start listening to HTTP requests and send out responses without
+            (which can be just a simple script) and start listening to HTTP requests and send out responses without
             the need for an application server or any specific external tool like nginx or Apache.
         </p>
         <p>
-            It also means, of course, that it provides APIs to access the filesystem, OS stuff, network
-            interfaces and packets as well as other things like out-of-the-box TLS support via OpenSSL.
+            It also means, of course, that it provides filesystem and network APIs as well as other things like
+            out-of-the-box TLS and encryption support via OpenSSL and compression with zlib.
         </p>
         <p>
-            Most of these APIs streamings interfaces which you can use to compose small and
+            These APIs are usually stream-based, which means you can use them to compose small and
             self-contained modules or functions that work together to achieve bigger purposes, similar to
             the unix philosophy, and the use of unix pipes.
         </p>
         <p>
-            It provides an event-loop to handle blocking I/O operations outside the main execution scope
+            Node.js provides an event-loop to handle blocking I/O operations outside the main execution scope
             (more on this in a minute).
         </p>
         <p>
-            If JS does not cut it, you can always write code in C or C++ and easily plug it
-            in your Node.js project through an addon, and use it like any other module via the
-            available bindings API.
+            If JS does not cut it, you can always write code in C or C++ and easily plug it in your Node.js project
+            through an addon, and use it like any other module through V8 and the available bindings.
         </p>
         <p>
-            It unifies the module system by providing the same API to access both internal and external
-            (3rd-party) modules via the CommonJS standard and NPM (Node Package Manager).
+            Speaking about modules, Node.js unifies the module system by providing the same interface to access
+            both internal and external (3rd-party) modules via the CommonJS standard and NPM (Node Package Manager).
         </p>
         <p>
             NPM is an essential piece in the process of developing Node.js applications. Besides being
-            the module system glue, it also provides support for things such as downloading and installing
-            dependencies, running tests, setting up build systems/pipelines and a bunch of other stuff.
+            the module system glue, it also works for other things such as downloading and installing
+            dependencies, running tests, setting up build systems/pipelines and tapping into the npm registry,
+            which is the largest repository of language-specific open source libraries in the world (currently
+            hosting more than half a milion packages).
         </p>
     </aside>
 </section>
@@ -77,14 +78,14 @@
         </p>
         <p>
             The event loop is basically a loop that runs outside the runtime execution scope, checks if the
-            runtime call stack is empty and picks tasks that were queued by some API, runs them and pushes
-            the result back into the stack. The event loop should, in the best case scenario, handle all
-            blocking (thus asynchronous) operations.
+            call stack is empty and picks tasks that have been queued by some API, runs them and pushes the
+            result back into the stack. The event loop should, in the best case scenario, handle all blocking
+            (thus asynchronous) operations.
         </p>
         <p>
-            The "native" way to defer work to the event loop is by registering a callback (which is just a function)
+            These tasks are deferred to the event loop by registering a callback (which is just a plain function)
             that should be called when the result of an asynchronous operation is ready. This is the way things work
-            on the core library, but there are a few abstractions over this pattern that I'll touch in a bit.
+            on the core library, but there are a few abstractions over this pattern that I'll describe in a bit.
         </p>
         <p>
             Non-blocking operations such as CPU-bound tasks, memory access, etc. run immediatelly and sequentially
@@ -92,9 +93,9 @@
             asynchronous in nature, should be handled eventually by the event loop, outside the main execution scope.
         </p>
         <p>
-            Despite being single threaded, real concurrency can be achieved through V8 (which provides access to threads)
-            or by spinning up additional Node.js processes (similar to other scripting languages). This is useful
-            for handling stuff like CPU intensive workloads without blocking I/O operations.
+            Despite being single threaded, real concurrency can be achieved through V8 (and C++ threads) or by
+            spinning up additional Node.js processes (similar to other scripting languages). This is useful for
+            handling stuff like CPU intensive workloads without blocking I/O operations.
         </p>
     </aside>
 </section>
@@ -144,7 +145,7 @@
             This is just a naive async-like function which delays the execution of something.
         </p>
         <p>
-            <span class="inline">setTimeout()</span> "triggers" the process of defering a task to
+            <span class="inline">setTimeout()</span> "triggers" the process of deferring a task to
             the event loop. Another function that does that is <span class="inline">process.nextTick()</span>
             which is used internally by the asynchronous functions of the core API.
         </p>
@@ -244,6 +245,10 @@
             Both methods get passed (you've guessed it) a callback handler, albeit one with
             a standard signature (just a single parameter).
         </p>
+        <p>
+            These abstractions are all push-based in nature, because the control is passed
+            to the producer of the result.
+        </p>
     </aside>
 </section>
 <section id="nodejs-pull-generators">
@@ -261,12 +266,12 @@
     </pre>
     <aside class="notes">
         <p>
-            Another language construct. Special kind of function that can stop execution and
-            yield its current state.
+            Another language construct. Special kind of function that can stop its execution
+            and yield its current state.
         </p>
         <p>
-            The execution is then resumed by the function caller in a cursor-based fashion,
-            making it pull-based, and not push-based like the previous examples.
+            The execution is then resumed by the caller in a cursor-based fashion, making it
+            pull-based by nature.
         </p>
     </aside>
 </section>
