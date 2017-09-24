@@ -28,10 +28,10 @@
 
         <span class="fragment">// re-create a collection
         await schema.dropCollection('pubs')
-        await schema.createCollection('pubs')</span>
+        const collection = await schema.createCollection('pubs')</span>
 
         <span class="fragment">// or re-use an existing collection
-        const collection = schema.createCollection('pubs', { ReuseExistingObject: true })</span>
+        const collection = await schema.createCollection('pubs', { ReuseExistingObject: true })</span>
         </code>
     </pre>
 </section>
@@ -120,10 +120,10 @@
         <span class="fragment">    await session.startTransaction()</span>
 
         <span class="fragment">    const result = await schema.getCollection('beers')
-                .add({ name: 'Guiness', pubs: [ 132775992 ] })</span>
+                .add({ name: 'Guiness', pubs: [ 132775992 ] }).execute()</span>
 
         <span class="fragment">    await schema.getCollection('pubs').modify('$._id == 132775992')
-                .arrayAppend('beers', result.getDocumentId())</span>
+                .arrayAppend('beers', result.getDocumentId()).execute()</span>
 
         <span class="fragment">    await session.commit()</span>
         } catch (err) {
