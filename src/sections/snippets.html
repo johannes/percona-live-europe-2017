@@ -120,7 +120,7 @@
         <span class="fragment">    await session.startTransaction()</span>
 
         <span class="fragment">    const result = await schema.getCollection('beers')
-                .add({ name: 'Guiness', pubs: [ 132775992 ] }).execute()</span>
+                .add({ name: 'Guinness', pubs: [ 132775992 ] }).execute()</span>
 
         <span class="fragment">    await schema.getCollection('pubs').modify('$._id == 132775992')
                 .arrayAppend('beers', result.getDocumentId()).execute()</span>

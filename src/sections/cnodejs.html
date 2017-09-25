@@ -181,7 +181,9 @@
         <code class="js" data-trim data-noescape>
             collection
                 .find()
-                .execute()
+                .execute(function (d) {
+                    // d: document instance
+                })
                 .then(function (r) {
                     // r: instance of Result (coming up next)
                 })
