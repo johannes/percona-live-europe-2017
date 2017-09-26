@@ -12,3 +12,7 @@ $ npm start
 ```
 
 Open the browser and navigate to the link that gets generated. Otherwise just click [here](http://localhost:8000).
+
+## Preview
+
+[https://ruiquelhas.github.io/percona-live-europe-2017/](https://ruiquelhas.github.io/percona-live-europe-2017/)
